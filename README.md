@@ -3,17 +3,22 @@
 This only works with WSL2. Windows not supported and I suggest not even attempting. If you ignore this and get stuck trying to use windows, you're on your own. I wont help you as it is a massive waste of time.#
 
 --CREATE AND ACTIVATE ENV--
+```
 conda --name xtts python==3.10
 conda activate xtts
+```
 
 --INSTALL TORCH--
-pip install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia (Dont use "conda install" use "pip install" conda with these repos and libraries it just doesnt work, I didnt look into it)
-
+```
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 (Dont use "conda install" use "pip install" conda with these repos and libraries it just doesnt work, I didnt look into it)
+```
 --INSTALL FMMPEG/RUST
+```
 sudo apt update && sudo apt install ffmpeg
 pip install setuptools-rust
-
+```
 --INSTALL WHISPERX--
+```
 git clone https://github.com/m-bain/whisperX.git
 cd whisperX
 pip install -e .
