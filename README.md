@@ -4,7 +4,14 @@ This only works with WSL2. Windows not supported and I suggest not even attempti
 
 --CREATE AND ACTIVATE ENV--
 ```
-conda --name xtts python==3.10
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+
+~/miniconda3/bin/conda init bash
+~/miniconda3/bin/conda init zsh
+conda create --name xtts python==3.10
 conda activate xtts
 ```
 
@@ -31,7 +38,18 @@ pip install -e .[all,dev,notebooks]
 make system-deps  (Do all three, doesnt work without it, dont know why, ask coquii)
 make install
 
-===============================================================================================================================================
+===========================================================================================================================
+We need to edit Trainer.py Lines 759 - 763
+   @staticmethod
+    def setup_training_environment(args, config, gpu):
+        if platform.system() != "Windows":
+            pass                                                                               # pass
+            # https://github.com/pytorch/pytorch/issues/973                                    comment out these four lines in the setup_training_environment function (759 - 763)
+            # import resource  # pylint: disable=import-outside-toplevel                                   "
+
+            # rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)                                          "
+            # resource.setrlimit(resource.RLIMIT_NOFILE, (4096, rlimit[1]))                                "
+========================================================================================================================
 - get data set, 1 48khz wav file
 
 - Get reference audio (length and amount unknown. Experiment)
