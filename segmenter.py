@@ -1,3 +1,5 @@
+# wav file MUST BE 48KHZ MONO#
+
 import webrtcvad
 import soundfile as sf
 import numpy as np
@@ -19,11 +21,14 @@ def audio_segmentation(audio_path, output_dir, segment_length_min, segment_lengt
         frame = audio[i:i+frame_length]
         # Convert frame to 16-bit PCM
         frame = np.short(frame * 32768).tobytes()
-        if vad.is_speech(frame, sample_rate):
-            audio_vad.append(frame)
+        # Check that frame is the correct length
+        if len(frame) == frame_length * 2:  # frame_length * 2 because each sample is 2 bytes
+            if vad.is_speech(frame, sample_rate):
+                audio_vad.append(frame)
     
     # Check if output directory exists and create it if not
     os.makedirs(output_dir, exist_ok=True)
+    
     # Segment audio
     segment = []
     segment_length = 0
@@ -52,5 +57,6 @@ def audio_segmentation(audio_path, output_dir, segment_length_min, segment_lengt
             segment_length = 0
             silence_count = 0
 
+
 # Usage
-audio_segmentation('/home/eleven/coquii/MyTTSDataset/largemodel/monoemma16bitmono.wav', '/home/eleven/coquii/WORKFROMHERE/wavs', 3, 20, 0.3)
+audio_segmentation('PATHTOWAVFILE', 'PATHTOSAVEWAVFILES', 3, 20, 0.3)
