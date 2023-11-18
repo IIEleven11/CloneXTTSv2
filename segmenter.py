@@ -12,7 +12,7 @@ def audio_segmentation(audio_path, output_dir, segment_length_min, segment_lengt
     # Initialize VAD
     vad = webrtcvad.Vad(3)  # 3 is the highest aggressiveness setting
     
-    # Calculate frame length (10 ms)
+    # Calculate frame length (10 ms) point of possible failure if you run into issues
     frame_length = int(sample_rate * 0.01)
     
     # Perform VAD
@@ -22,7 +22,7 @@ def audio_segmentation(audio_path, output_dir, segment_length_min, segment_lengt
         # Convert frame to 16-bit PCM
         frame = np.short(frame * 32768).tobytes()
         # Check that frame is the correct length
-        if len(frame) == frame_length * 2:  # frame_length * 2 because each sample is 2 bytes
+        if len(frame) == frame_length * 2:  # frame_length * 2 because each sample is 2 bytes. this is a point of possible failure if you run into issues
             if vad.is_speech(frame, sample_rate):
                 audio_vad.append(frame)
     
