@@ -1,6 +1,7 @@
 # CloneXTTSv2
 
 This only works with WSL2 (I assume linux as well). Windows is not supported and I suggest not even attempting. If you ignore this and get stuck trying to use windows, you're on your own. I wont help you, as it is a massive waste of time.
+-- Were working with the XTTSv2 Coquii Recipe. Its in the TTS repo youre about to clone under recipes ljspeech etc...
 
 --Download/install Miniconda--
 ```
