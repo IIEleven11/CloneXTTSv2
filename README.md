@@ -62,13 +62,13 @@ We need to edit Trainer.py Lines 759 - 763 (Or at least I did with my datasets)
 
 ========================================================================================================================
 
-- get data set, 1 48khz wav file, MONO 
+- get data set, 1 48khz wav file, MONO. 
 
 - Get reference audio (length and amount unknown. Experiment)
 
-- Use segmenter.py, point it at your single 48khz audio file
+- Use segmenter.py, first create a folder named "training" in the "training folder make another folder named "wavs". Put all segments into the "wavs" folder. Point script at your 48khz single .wav file and "wavs" folder..
 
-- Use transcriber.py, pointing it at the segments folder.
+- Use transcriber.py, pointing it at the "wavs" folder. METADATA.CSV must go into your "training" folder.
    - The format of metadata.csv follows ljspeech: "audio1|transcription|validation" or if you have no validation, repeat transcription: "audio1|transcription|transcription"
    - The script will transcribe good audio and remove any audio it doesnt understand putting it in the badAudio folder.
    - It will create metadata.csv for you. Lining up your segments with the corresponding transcript.
