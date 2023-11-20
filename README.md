@@ -67,13 +67,6 @@ We need to edit Trainer.py Lines 759 - 763 (Or at least I did with my datasets)
 - Get reference audio (length and amount unknown. Experiment)
 
 - Use segmenter.py, point it at your single 48khz audio file
-- My segmenter script is a very very delicate script/process. A lot of things can go wrong very easily. It's important to be very meticulous, go slow, pay attention to each detail, and match every piece of this instruction. The script will create 1-10 second long audio clips. It should in theory not cut off sentences 
-  or speech.
-              A) One .wav file
-              B) 48khz
-              C) Mono (Do not use stereo!)
-              D) Clarity (When it comes to voice cloning, dataset is a very important factor. Make sure its audible, clear of any background noise, and a single speaker)
-              E) 16bit PCM
 
 - Use transcriber.py, pointing it at the segments folder.
    - The format of metadata.csv follows ljspeech: "audio1|transcription|validation" or if you have no validation, repeat transcription: "audio1|transcription|transcription"
