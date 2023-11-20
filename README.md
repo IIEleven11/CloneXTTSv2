@@ -74,7 +74,7 @@ We need to edit Trainer.py Lines 759 - 763 (Or at least I did with my datasets)
    - It will create metadata.csv for you. Lining up your segments with the corresponding transcript.
    - You have the option to validate the text. I have no script for that. 
 
-- Convert all of your new segmented audio clips into 22050 khz audio files for training
+- Convert all of your new segmented audio clips into 22050 khz audio files for training. (I have since edited the segmenter script. I'm under the impression the sample rate will no longer matter. If you want to use something besides 22050 for this you should be able to. I have yet to test this though.)
    The segmenter script i made doesn't accept 22050 khz audio files. The train_gpt_xtts.py script we will use makes use of the DVAE model/Data which is a 22050 sample rate. It appears that you may be able to get away with keeping your own dataset at 48000khz. I have tried this and ended up with a chipmunk sounding 
    output. There couldve been an error somewhere else but from what I could see it was this upscaling from 22050 that caused it.
 
@@ -99,7 +99,7 @@ We need to edit Trainer.py Lines 759 - 763 (Or at least I did with my datasets)
            eval_batch_size=BATCH_SIZE,
            num_loader_workers=8,
            eval_split_max_size=256,
-           eval_split_size=0.11,      # This line right here. If it is missing, add it. For my 151 audio files, using .11 got me to 16 eval samples. Normal range of eval samples is between 15-30.
+           eval_split_size=0.11,      # !!!This line right here!!!. When you clone the repo it is missing, add it. For my 151 audio files, using .11 got me to 16 eval samples. Normal range of eval samples is between 15-30.
            print_step=50,
            plot_step=100,
            log_model_step=100,
