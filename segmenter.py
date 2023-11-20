@@ -1,62 +1,14 @@
-# wav file MUST BE 48KHZ MONO#
+import auditok
 
-import webrtcvad
-import soundfile as sf
-import numpy as np
-import os
+# Load audio file
+audio_regions = auditok.split(
+    "/home/pathtowavfile.wav",
+    min_dur=2,  # minimum duration of a valid audio event in seconds
+    max_dur=12,  # maximum duration of an event
+    max_silence=0.3,  # maximum duration of tolerated continuous silence within an event
+    energy_threshold=35  # threshold of detection
+)
 
-def audio_segmentation(audio_path, output_dir, segment_length_min, segment_length_max, silence_length):
-    # Load audio file
-    audio, sample_rate = sf.read(audio_path)
-    
-    # Initialize VAD
-    vad = webrtcvad.Vad(3)  # 3 is the highest aggressiveness setting
-    
-    # Calculate frame length (10 ms) point of possible failure if you run into issues
-    frame_length = int(sample_rate * 0.01)
-    
-    # Perform VAD
-    audio_vad = []
-    for i in range(0, len(audio), frame_length):
-        frame = audio[i:i+frame_length]
-        # Convert frame to 16-bit PCM
-        frame = np.short(frame * 32768).tobytes()
-        # Check that frame is the correct length
-        if len(frame) == frame_length * 2:  # frame_length * 2 because each sample is 2 bytes. this is a point of possible failure if you run into issues
-            if vad.is_speech(frame, sample_rate):
-                audio_vad.append(frame)
-    
-    # Check if output directory exists and create it if not
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Segment audio
-    segment = []
-    segment_length = 0
-    silence_count = 0
-    segment_index = 0
-    for frame in audio_vad:
-        segment.append(np.frombuffer(frame, np.int16))
-        segment_length += len(frame) / sample_rate
-        if np.mean(np.abs(np.frombuffer(frame, np.int16))) < 200:  # adjust threshold as needed
-            silence_count += 1
-        else:
-            silence_count = 0
-        if segment_length > segment_length_max or (segment_length > segment_length_min and silence_count * frame_length / sample_rate > silence_length):
-            if segment_length > segment_length_max:
-                segment = segment[:int(segment_length_max * sample_rate / 2)]
-                segment_length = len(segment) * 2 / sample_rate
-            else:
-                segment = segment[:-silence_count]
-                segment_length -= silence_count * frame_length / sample_rate
-            # Write segment to file
-            segment_path = os.path.join(output_dir, 'audio{:04d}.wav'.format(segment_index))
-            sf.write(segment_path, np.concatenate(segment), sample_rate)
-            segment_index += 1
-            # Reset segment
-            segment = []
-            segment_length = 0
-            silence_count = 0
-
-
-# Usage
-audio_segmentation('PATHTOWAVFILE', 'PATHTOSAVEWAVFILES', 3, 20, 0.3)
+# Save regions to separate audio files
+for i, region in enumerate(audio_regions):
+    region.save(f"/home/pathtosavewavfilesegments/audio{i}.wav")
